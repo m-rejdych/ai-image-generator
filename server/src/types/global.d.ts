@@ -13,4 +13,10 @@ declare global {
       SECRET_KEY: string;
     }
   }
+
+  declare namespace Express {
+    interface Request {
+      apiKeyId: string;
+    }
+  }
 }
