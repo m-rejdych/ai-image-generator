@@ -11,6 +11,7 @@ declare global {
       NODE_ENV: 'production' | 'development';
       GENERATE_API_KEY_ENDPOINT: string;
       SECRET_KEY: string;
+      CLIENT_URL: string;
     }
   }
 
