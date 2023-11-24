@@ -6,3 +6,7 @@ export const generateApiKeySchema = z.object({
     message: 'roleType must be one of the following: "User", "Admin"',
   }),
 });
+
+export const loginSchema = z.object({
+  apiKey: z.string(),
+});
