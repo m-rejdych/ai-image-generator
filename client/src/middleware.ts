@@ -2,10 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 import { login } from './services/auth';
-
-const AUTH_URL = '/auth';
-const BASE_APP_URL = '/';
-const PROTECTED_ROUTES = [BASE_APP_URL];
+import { AUTH_URL, BASE_APP_URL, PROTECTED_ROUTES } from './constants/urls';
 
 export const middleware = async (req: NextRequest) => {
   const apiKey = req.cookies.get('apiKey');
@@ -13,7 +10,7 @@ export const middleware = async (req: NextRequest) => {
 
   if (!apiKey) {
     return PROTECTED_ROUTES.includes(pathname)
-      ? NextResponse.redirect(new URL('/auth', origin))
+      ? NextResponse.redirect(new URL(AUTH_URL, origin))
       : NextResponse.next();
   }
 
@@ -22,11 +19,11 @@ export const middleware = async (req: NextRequest) => {
       return pathname === AUTH_URL
         ? NextResponse.redirect(new URL(BASE_APP_URL, origin))
         : NextResponse.next();
-    } else {
-      return PROTECTED_ROUTES.includes(pathname)
-        ? NextResponse.redirect(new URL(AUTH_URL, origin))
-        : NextResponse.next();
     }
+
+    return PROTECTED_ROUTES.includes(pathname)
+      ? NextResponse.redirect(new URL(AUTH_URL, origin))
+      : NextResponse.next();
   } catch {
     return PROTECTED_ROUTES.includes(pathname)
       ? NextResponse.redirect(new URL(AUTH_URL, origin))

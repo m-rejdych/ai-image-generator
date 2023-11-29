@@ -8,6 +8,7 @@ export const login = async (apiKey: string): Promise<boolean> => {
     },
     body: JSON.stringify({ apiKey }),
     credentials: 'include',
+    cache: 'no-store',
   });
 
   const data: ResultResBody = await response.json();

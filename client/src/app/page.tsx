@@ -1,3 +1,3 @@
-export default function App() {
+export default async function App() {
   return <div>hi boi</div>;
 }
