@@ -1,4 +1,7 @@
 import type { Config } from 'tailwindcss';
+import defaultColors from 'tailwindcss/colors';
+
+const { neutral, ...colors } = defaultColors;
 
 const config: Config = {
   content: [
@@ -44,6 +47,7 @@ const config: Config = {
         '800': '#870557',
         '900': '#620042',
       },
+      ...colors,
     },
   },
   plugins: [require('@tailwindcss/forms')],

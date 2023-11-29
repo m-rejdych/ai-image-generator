@@ -13,7 +13,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className="h-full bg-neutral-900">
       <body className={`${inter.className} h-full`}>
-        <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
+        <div className="min-h-full mx-auto max-w-7xl sm:px-6 lg:px-8">
           {children}
         </div>
       </body>
