@@ -30,3 +30,6 @@ yarn-error.log*
 
 #db
 /db
+
+#storage
+box-config.json
