@@ -1,10 +1,10 @@
 import { z } from 'zod';
 import { RoleType } from '@prisma/client';
 
+type RoleTypes = [RoleType, RoleType];
+
 export const generateApiKeySchema = z.object({
-  roleType: z.custom<RoleType>((value) => Object.values(RoleType).includes(value as RoleType), {
-    message: 'roleType must be one of the following: "User", "Admin"',
-  }),
+  roleType: z.enum(Object.values(RoleType) as RoleTypes),
 });
 
 export const loginSchema = z.object({

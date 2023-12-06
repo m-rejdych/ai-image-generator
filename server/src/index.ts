@@ -6,7 +6,7 @@ import { config } from 'dotenv';
 import { genericErrorHandler } from './util/error';
 import { validateAuthorizationApiKey } from './middleware/auth';
 import { router as authRouter } from './routes/auth';
-import { router as imageRouter } from './routes/auth';
+import { router as imageRouter } from './routes/image';
 
 config();
 

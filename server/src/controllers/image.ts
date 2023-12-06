@@ -1,12 +1,31 @@
 import fetch from 'node-fetch';
+import { randomUUID } from 'crypto';
+// import https from 'https';
+// import { createWriteStream } from 'fs';
+//
+import { dbx } from '../util/dropbox';
+import { prisma } from '../util/prisma';
+import type { Style } from '../schemas/image';
 
-interface GenerateImageResponse {
+interface GenerateImageRes {
   created: number;
   data: [{ url: string }];
 }
 
-export const generateImage = async (prompt: string) => {
-  const response = await fetch(process.env.GENERATE_ENDPOINT, {
+export interface GenerateImageData {
+  prompt: string;
+  name: string;
+  style?: Style;
+}
+
+const OPEN_AI_GENERATE_ENDPOINT = 'https://api.openai.com/v1/images/generations' as const;
+
+export const generateImage = async (
+  apiKeyId: string,
+  { prompt, name, style }: GenerateImageData,
+) => {
+  const response = await fetch(OPEN_AI_GENERATE_ENDPOINT, {
+    method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${process.env.OPEN_AI_API_KEY}`,
@@ -14,12 +33,24 @@ export const generateImage = async (prompt: string) => {
     body: JSON.stringify({
       model: 'dall-e-3',
       prompt,
+      style,
     }),
   });
 
-  const { data } = await response.json() as GenerateImageResponse ;
+  const { data } = (await response.json()) as GenerateImageRes;
 
   const url = data[0].url;
+  const id = randomUUID();
 
-  return url;
+  const imageResponse = await fetch(url);
+  const buffer = await imageResponse.buffer();
+  const path = `/${apiKeyId}/${id}.png`;
+
+  await dbx.filesUpload({ path, contents: buffer });
+  const link = await dbx.sharingCreateSharedLinkWithSettings({ path });
+  const linkUrl = `${link.result.url}&raw=1`;
+
+  const image = await prisma.image.create({ data: { id, apiKeyId, name, url: linkUrl } });
+
+  return image.url;
 };
