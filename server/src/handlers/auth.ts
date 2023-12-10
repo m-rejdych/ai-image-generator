@@ -39,7 +39,7 @@ export const generateApiKeyHandler: RequestHandler<
 
 export const loginHandler: RequestHandler<
   Record<string, never>,
-  ResultResBody,
+  ResultResBody<null>,
   LoginReqBody
 > = async (req, res, next) => {
   try {
@@ -57,7 +57,7 @@ export const loginHandler: RequestHandler<
       secure: process.env.NODE_ENV === 'production',
     });
 
-    res.json({ result: 'success' });
+    res.json({ result: 'success', data: null });
   } catch (error) {
     next(error);
   }

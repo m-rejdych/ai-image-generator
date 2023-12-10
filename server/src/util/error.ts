@@ -1,8 +1,15 @@
 import type { ErrorRequestHandler } from 'express';
 
+import type { ResultResBody } from '../types/response';
+
 interface ExtendedError extends Error {
   status: number;
 }
+
+type ErrorResData = {
+  message: string;
+  status: number;
+};
 
 export const createError = (message: string, status = 500): Error => {
   const error = new Error(message) as ExtendedError;
@@ -11,12 +18,10 @@ export const createError = (message: string, status = 500): Error => {
   return error;
 };
 
-export const genericErrorHandler: ErrorRequestHandler = (
-  error: ExtendedError | Error,
-  _,
-  res,
-  __,
-) => {
+export const genericErrorHandler: ErrorRequestHandler<
+  Record<string, never>,
+  ResultResBody<ErrorResData>
+> = (error: ExtendedError | Error, _, res, __) => {
   console.log(error);
 
   const parsedMessage = (() => {
@@ -28,5 +33,7 @@ export const genericErrorHandler: ErrorRequestHandler = (
   })();
 
   const status = 'status' in error ? error.status : 500;
-  res.status(status).json({ message: parsedMessage ?? error.message, status });
+  res
+    .status(status)
+    .json({ result: 'failure', data: { message: parsedMessage ?? error.message, status } });
 };

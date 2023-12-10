@@ -11,7 +11,7 @@ export const login = async (apiKey: string): Promise<boolean> => {
     cache: 'no-store',
   });
 
-  const data: ResultResBody = await response.json();
+  const data: ResultResBody<null> = await response.json();
 
   return data.result === 'success';
 }

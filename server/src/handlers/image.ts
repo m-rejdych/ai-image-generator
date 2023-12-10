@@ -1,21 +1,22 @@
 import { RequestHandler } from 'express';
 
-import { generateImage, type GenerateImageData } from '../controllers/image';
+import { generateImage } from '../controllers/image';
 import { generateImageSchema } from '../schemas/image';
+import type { ResultResBody } from '../types/response';
 
-interface GenerateImageResBody {
+type GenerateImageResData = {
   url: string;
 }
 
 export const generateImageHandler: RequestHandler<
   Record<string, never>,
-  GenerateImageResBody,
-  GenerateImageData
+  ResultResBody<GenerateImageResData>,
+  GenerateImageResData
 > = async (req, res, next) => {
   try {
     const data = generateImageSchema.parse(req.body);
     const url = await generateImage(req.apiKeyId, data);
-    res.json({ url });
+    res.json({ result: 'success', data: { url } });
   } catch (error) {
     next(error);
   }

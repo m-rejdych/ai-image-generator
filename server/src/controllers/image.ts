@@ -1,8 +1,6 @@
 import fetch from 'node-fetch';
 import { randomUUID } from 'crypto';
-// import https from 'https';
-// import { createWriteStream } from 'fs';
-//
+
 import { dbx } from '../util/dropbox';
 import { prisma } from '../util/prisma';
 import type { Style } from '../schemas/image';
