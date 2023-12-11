@@ -1,5 +1,6 @@
 import fetch from 'node-fetch';
 import { randomUUID } from 'crypto';
+import type { Prisma } from '@prisma/client';
 
 import { dbx } from '../util/dropbox';
 import { prisma } from '../util/prisma';
@@ -15,6 +16,14 @@ export interface GenerateImageData {
   name: string;
   style?: Style;
 }
+
+export type GetImagesData = Prisma.ImageGetPayload<{
+  select: {
+    id: true;
+    name: true;
+    url: true;
+  }
+}>[];
 
 const OPEN_AI_GENERATE_ENDPOINT = 'https://api.openai.com/v1/images/generations' as const;
 
@@ -51,4 +60,13 @@ export const generateImage = async (
   const image = await prisma.image.create({ data: { id, apiKeyId, name, url: linkUrl } });
 
   return image.url;
+};
+
+export const getImages = async (apiKeyId: string): Promise<GetImagesData> => {
+  const images = await prisma.image.findMany({
+    where: { apiKeyId },
+    select: { id: true, url: true, name: true },
+  });
+
+  return images;
 };
