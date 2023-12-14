@@ -1,6 +1,6 @@
 import type { ResultResBody } from '../types/response';
 
-interface Image {
+export interface Image {
   id: string;
   url: string;
   name: string;

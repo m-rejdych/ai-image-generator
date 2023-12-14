@@ -12,7 +12,7 @@ interface Props {
   onClose: () => void;
 }
 
-export default function Example({ open, onClose }: Props) {
+export default function PromptInput({ open, onClose }: Props) {
   const [prompt, setPrompt] = useState('');
   const [name, setName] = useState('');
   const [showNameInput, setShowNameInput] = useState(false);
@@ -77,7 +77,7 @@ export default function Example({ open, onClose }: Props) {
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-black bg-opacity-60 transition-opacity" />
+          <div className="fixed inset-0 bg-black bg-opacity-70 transition-opacity" />
         </Transition.Child>
         <div className="fixed inset-0 z-10 w-screen overflow-y-auto p-4 sm:p-6 md:p-20">
           <Transition.Child
@@ -101,7 +101,8 @@ export default function Example({ open, onClose }: Props) {
                     onKeyDown={handleKeyDownPrompt}
                   />
                 </div>
-                <Transition show={showNameInput}
+                <Transition
+                  show={showNameInput}
                   className="relative"
                   enter="transition ease-out duration-300 transform"
                   enterFrom="-translate-y-full"
@@ -124,7 +125,15 @@ export default function Example({ open, onClose }: Props) {
                   enterFrom="-translate-y-full"
                   enterTo="translate-y-0"
                 >
-                  {url && <Image fill sizes="(max-width: 672px) 100vw, (min-width: 672px) 672px" src={url} alt={name} onLoad={() => setImageLoaded(true)} />}
+                  {url && (
+                    <Image
+                      fill
+                      sizes="(max-width: 672px) 100vw, (min-width: 672px) 672px"
+                      src={url}
+                      alt={name}
+                      onLoad={() => setImageLoaded(true)}
+                    />
+                  )}
                   {isLoading && (
                     <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-full w-full flex justify-center items-center">
                       <Loader />
