@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 
-import { generateImage, getImages, type GetImagesData } from '../controllers/image';
+import { generateImage, getImages, type GetImagesData, type GetImagesOptions } from '../controllers/image';
 import { generateImageSchema } from '../schemas/image';
 import type { ResultResBody } from '../types/response';
 
@@ -28,10 +28,12 @@ export const generateImageHandler: RequestHandler<
 
 export const getImagesHandler: RequestHandler<
   Record<string, never>,
-  ResultResBody<GetImagesResData>
+  ResultResBody<GetImagesResData>,
+  never,
+  GetImagesOptions
 > = async (req, res, next) => {
   try {
-    const images = await getImages(req.apiKeyId);
+    const images = await getImages(req.apiKeyId, req.query);
 
     res.json({ result: 'success', data: { images } });
   } catch (error) {

@@ -1,8 +1,18 @@
 import type { ResultResBody } from '../types/response';
 
+interface Image {
+  id: string;
+  url: string;
+  name: string;
+}
+
 type GenerateImageResData = {
   url: string;
 };
+
+type GetImagesResData = {
+  images: Image[];
+}
 
 export const generateImage = async (
   name: string,
@@ -18,7 +28,18 @@ export const generateImage = async (
     body: JSON.stringify({ name, prompt, style }),
   });
 
-  const resData: ResultResBody<GenerateImageResData> = await response.json();
+  const { data }: ResultResBody<GenerateImageResData> = await response.json();
 
-  return resData.data.url;
+  return data.url;
+};
+
+export const getImages = async (cookie?: string): Promise<Image[]> => {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/image/list?sort=desc`, {
+    credentials: 'include',
+    headers: cookie ? { Cookie: cookie } : undefined,
+  });
+
+  const { data } = await response.json() as ResultResBody<GetImagesResData>;
+
+  return data.images;
 };

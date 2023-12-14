@@ -1,6 +1,7 @@
 import { Fragment, useState, useRef } from 'react';
 import { Combobox, Dialog, Transition } from '@headlessui/react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 import Loader from './Loader';
 
@@ -18,6 +19,7 @@ export default function Example({ open, onClose }: Props) {
   const [loading, setLoading] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [url, setUrl] = useState('');
+  const router = useRouter();
   const nameRef = useRef<HTMLInputElement>(null);
 
   const isLoading = (!imageLoaded && !!url) || loading;
@@ -48,6 +50,7 @@ export default function Example({ open, onClose }: Props) {
       const url = await generateImage(name, prompt);
       setUrl(url);
       setLoading(false);
+      router.refresh();
     } catch (error) {
       console.log(error);
       setLoading(false);
@@ -92,6 +95,7 @@ export default function Example({ open, onClose }: Props) {
                   <Combobox.Input
                     className="h-12 w-full border-0 bg-transparent disabled:text-neutral-500 px-4 text-neutral-200 placeholder:text-neutral-400 focus:ring-0 sm:text-sm"
                     placeholder="Describe your image"
+                    autoComplete="off"
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
                     onKeyDown={handleKeyDownPrompt}
@@ -106,6 +110,7 @@ export default function Example({ open, onClose }: Props) {
                   <Combobox.Input
                     className="h-12 w-full border-0 bg-transparent disabled:text-neutral-500 px-4 text-neutral-200 placeholder:text-neutral-400 focus:ring-0 sm:text-sm"
                     placeholder="Enter a name for your image"
+                    autoComplete="off"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     onKeyDown={handleKeyDownName}
@@ -114,7 +119,7 @@ export default function Example({ open, onClose }: Props) {
                 </Transition>
                 <Transition
                   show={!!(loading || url)}
-                  className="relative w-full aspect-square flex items-center justify-center "
+                  className="relative w-full aspect-1 flex items-center justify-center"
                   enter="transition ease-out duration-300 transform"
                   enterFrom="-translate-y-full"
                   enterTo="translate-y-0"

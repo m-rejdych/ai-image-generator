@@ -4,6 +4,7 @@ import type { Prisma } from '@prisma/client';
 
 import { dbx } from '../util/dropbox';
 import { prisma } from '../util/prisma';
+import { getSortByCreatedAtType, type SortType } from '../util/image';
 import type { Style } from '../schemas/image';
 
 interface GenerateImageRes {
@@ -24,6 +25,10 @@ export type GetImagesData = Prisma.ImageGetPayload<{
     url: true;
   }
 }>[];
+
+export interface GetImagesOptions {
+  sort?: SortType;
+}
 
 const OPEN_AI_GENERATE_ENDPOINT = 'https://api.openai.com/v1/images/generations' as const;
 
@@ -62,10 +67,11 @@ export const generateImage = async (
   return image.url;
 };
 
-export const getImages = async (apiKeyId: string): Promise<GetImagesData> => {
+export const getImages = async (apiKeyId: string, { sort }: GetImagesOptions = {}): Promise<GetImagesData> => {
   const images = await prisma.image.findMany({
     where: { apiKeyId },
     select: { id: true, url: true, name: true },
+    orderBy: { createdAt: getSortByCreatedAtType(sort) }
   });
 
   return images;
