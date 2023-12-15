@@ -6,7 +6,12 @@ import { dbx } from '../util/dropbox';
 import { sha256 } from '../util/auth';
 import { createError } from '../util/error';
 
-export const generateApiKey = async (roleType: RoleType): Promise<string> => {
+interface GenerateApiKeyData {
+  roleType: RoleType;
+  limit?: number;
+}
+
+export const generateApiKey = async ({ roleType, limit }: GenerateApiKeyData): Promise<string> => {
   const role = await prisma.role.findUnique({ where: { type: roleType } });
   if (!role) {
     throw createError('Role type not found', 500);
@@ -16,6 +21,11 @@ export const generateApiKey = async (roleType: RoleType): Promise<string> => {
   const hash = sha256(id);
 
   const apiKey = await prisma.apiKey.create({ data: { hash, roleId: role.id } });
+
+  if (limit) {
+    await prisma.limit.create({ data: { max: limit, apiKeyId: apiKey.id } });
+  }
+
   await dbx.filesCreateFolderV2({ path: `/${apiKey.id}` });
 
   return id;

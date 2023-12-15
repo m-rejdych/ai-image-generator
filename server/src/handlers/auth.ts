@@ -13,6 +13,7 @@ interface GenerateApiKeyResBody {
 
 interface GenerateApiKeyReqBody {
   roleType: RoleType;
+  limit?: number;
 }
 
 interface LoginReqBody {
@@ -29,7 +30,7 @@ export const generateApiKeyHandler: RequestHandler<
   try {
     const data = await generateApiKeySchema.parseAsync(req.body);
 
-    const apiKey = await generateApiKey(data.roleType);
+    const apiKey = await generateApiKey(data);
 
     res.json({ apiKey });
   } catch (error) {

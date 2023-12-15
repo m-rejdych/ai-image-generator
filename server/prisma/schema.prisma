@@ -18,6 +18,7 @@ model ApiKey {
   images Image[]
   roleId String
   role Role @relation(fields: [roleId], references: [id])
+  limit Limit?
 }
 
 model Image {
@@ -34,6 +35,14 @@ model Role {
   id String @id @default(uuid())
   type RoleType @unique
   apiKeys ApiKey[]
+}
+
+model Limit {
+  id String @id @default(uuid())
+  max Int
+  current Int @default(0)
+  apiKeyId String @unique
+  apiKey ApiKey @relation(fields: [apiKeyId], references: [id], onDelete: Cascade)
 }
 
 enum RoleType {

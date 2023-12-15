@@ -18,17 +18,21 @@ export const validateAuthorizationSecretKey: RequestHandler = (req, _, next) => 
 };
 
 export const validateAuthorizationApiKey: RequestHandler = async (req, _, next) => {
-  const {apiKey: apiKeyCookie} = req.cookies;
+  const { apiKey: apiKeyCookie } = req.cookies;
   if (!apiKeyCookie) {
     return next(createError('Forbidden', 403));
   };
 
-  const apiKey = await getApiKey(apiKeyCookie);
-  if (!apiKey) {
-    return next(createError('Forbidden', 403));
+  try {
+    const apiKey = await getApiKey(apiKeyCookie);
+    if (!apiKey) {
+      return next(createError('Forbidden', 403));
+    }
+
+    req.apiKeyId = apiKey.id;
+
+    next();
+  } catch (error) {
+    next(error);
   }
-
-  req.apiKeyId = apiKey.id;
-
-  next();
 };

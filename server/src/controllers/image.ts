@@ -23,7 +23,7 @@ export type GetImagesData = Prisma.ImageGetPayload<{
     id: true;
     name: true;
     url: true;
-  }
+  };
 }>[];
 
 export interface GetImagesOptions {
@@ -64,14 +64,22 @@ export const generateImage = async (
 
   const image = await prisma.image.create({ data: { id, apiKeyId, name, url: linkUrl } });
 
+  const limit = await prisma.limit.findUnique({ where: { apiKeyId } });
+  if (limit) {
+    await prisma.limit.update({ where: { id: limit.id }, data: { current: limit.current + 1 } });
+  }
+
   return image.url;
 };
 
-export const getImages = async (apiKeyId: string, { sort }: GetImagesOptions = {}): Promise<GetImagesData> => {
+export const getImages = async (
+  apiKeyId: string,
+  { sort }: GetImagesOptions = {},
+): Promise<GetImagesData> => {
   const images = await prisma.image.findMany({
     where: { apiKeyId },
     select: { id: true, url: true, name: true },
-    orderBy: { createdAt: getSortByCreatedAtType(sort) }
+    orderBy: { createdAt: getSortByCreatedAtType(sort) },
   });
 
   return images;
