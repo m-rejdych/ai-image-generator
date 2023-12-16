@@ -3,7 +3,7 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        hostname: 'www.dropbox.com',
+        hostname: 'dropbox.com',
         port: '',
         protocol: 'https',
         pathname: '**',
