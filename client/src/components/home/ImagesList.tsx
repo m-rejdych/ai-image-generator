@@ -33,6 +33,7 @@ export default function ImagesList({ images }: Props) {
               src={url}
               alt={name}
               className="pointer-events-none object-cover group-hover:opacity-75"
+              unoptimized
             />
             <button
               type="button"
