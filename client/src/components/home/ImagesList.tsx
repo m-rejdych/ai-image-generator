@@ -27,9 +27,9 @@ export default function ImagesList({ images }: Props) {
         <li key={id} className="relative">
           <div className="group aspect-h-7 aspect-w-7 block w-full overflow-hidden rounded-lg bg-neutral-900 focus-within:ring-2 focus-within:ring-primary-500 focus-within:ring-offset-2 focus-within:ring-offset-neutral-900">
             <Image
-              width={500}
-              height={500}
+              fill
               priority
+              sizes="(max-width: 1024px) 300px, (min-width: 1024px) 240px"
               src={url}
               alt={name}
               className="pointer-events-none object-cover group-hover:opacity-75"
