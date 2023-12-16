@@ -56,6 +56,7 @@ export const loginHandler: RequestHandler<
       httpOnly: true,
       maxAge: COOKIE_MAX_AGE,
       secure: process.env.NODE_ENV === 'production',
+      domain: 'mrejdych.com',
     });
 
     res.json({ result: 'success', data: null });
