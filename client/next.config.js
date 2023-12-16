@@ -4,10 +4,8 @@ const nextConfig = {
     domains: ['dropbox.com'],
     remotePatterns: [
       {
-        hostname: 'www.dropbox.com',
-        port: '',
+        hostname: '**.dropbox.com',
         protocol: 'https',
-        pathname: '**',
       }
     ]
   },

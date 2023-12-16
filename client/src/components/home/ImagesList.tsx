@@ -30,7 +30,7 @@ export default function ImagesList({ images }: Props) {
               fill
               priority
               sizes="(max-width: 1024px) 300px, (min-width: 1024px) 240px"
-              src={url.toLowerCase()}
+              src={url}
               alt={name}
               className="pointer-events-none object-cover group-hover:opacity-75"
             />
