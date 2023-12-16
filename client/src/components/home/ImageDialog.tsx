@@ -3,7 +3,6 @@ import Image from 'next/image';
 import { Dialog, Transition } from '@headlessui/react';
 
 import Loader from '@/components/home/Loader';
-import { imageLoader } from '@/util/image';
 
 interface Props {
   open: boolean;
@@ -50,7 +49,6 @@ export default function ImageDialog({ open, url, alt, onClose, onClosed }: Props
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-neutral-900 px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-[calc(100vh-4.5rem)] xl:max-w-5xl sm:p-6 aspect-1 w-screen">
                 <Image
                   ref={imageRef}
-                  loader={imageLoader}
                   src={url}
                   alt={alt}
                   fill

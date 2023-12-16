@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['www.dropbox.com'],
+    domains: ['dropbox.com'],
     remotePatterns: [
       {
         hostname: 'www.dropbox.com',
