@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 import Loader from './Loader';
-
+import { imageLoader } from '@/util/image';
 import { generateImage } from '@/services/image';
 
 interface Props {
@@ -128,6 +128,7 @@ export default function PromptInput({ open, onClose }: Props) {
                   {url && (
                     <Image
                       fill
+                      loader={imageLoader}
                       sizes="(max-width: 672px) 100vw, (min-width: 672px) 672px"
                       src={url}
                       alt={name}

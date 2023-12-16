@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 
+import { imageLoader } from '@/util/image';
 import ImageDialog from '@/components/home/ImageDialog';
 import type { Image as ImageType } from '@/services/image';
 
@@ -29,6 +30,7 @@ export default function ImagesList({ images }: Props) {
             <Image
               fill
               priority
+              loader={imageLoader}
               sizes="(max-width: 1024px) 300px, (min-width: 1024px) 240px"
               src={url}
               alt={name}
