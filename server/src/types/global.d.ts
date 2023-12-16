@@ -12,6 +12,7 @@ declare global {
       HOST: string;
       NODE_ENV: 'production' | 'development';
       GENERATE_API_KEY_ENDPOINT: string;
+      PRODUCTION_DOMAIN: string;
       OPEN_AI_API_KEY: string;
       SECRET_KEY: string;
       CLIENT_URL: string;
