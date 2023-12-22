@@ -13,7 +13,7 @@ interface ClassNameOptions {
 
 const getClassName = ({ disabled, className }: ClassNameOptions): string => {
   const baseClassNames =
-    'flex w-full justify-center rounded-md bg-primary-600 px-3 py-1.5 text-sm font-semibold leading-6 text-neutral-100 shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500';
+    'flex w-full justify-center rounded-md px-3 py-1.5 text-sm font-semibold leading-6 text-neutral-100 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500';
 
   if (disabled)
     return `${baseClassNames} bg-neutral-600 text-neutral-300 focus:outline-none pointer-events-none ${
