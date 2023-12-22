@@ -19,6 +19,9 @@ declare global {
       DROPBOX_REFRESH_TOKEN: string;
       DROPBOX_APP_KEY: string;
       DROPBOX_APP_SECRET: string;
+      CLOUDINARY_CLOUD_NAME: string;
+      CLOUDINARY_API_KEY: string;
+      CLOUDINARY_API_SECRET: string;
     }
   }
 

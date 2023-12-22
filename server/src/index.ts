@@ -2,6 +2,7 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import { config } from 'dotenv';
+import { v2 as cloudinary } from 'cloudinary';
 
 import { genericErrorHandler } from './util/error';
 import { validateAuthorizationApiKey } from './middleware/auth';
@@ -9,6 +10,13 @@ import { router as authRouter } from './routes/auth';
 import { router as imageRouter } from './routes/image';
 
 config();
+
+cloudinary.config({
+  secure: true,
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 const app = express();
 

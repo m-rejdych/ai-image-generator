@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
+import { CldImage } from 'next-cloudinary';
 
 import ImageDialog from '@/components/home/ImageDialog';
 import type { Image as ImageType } from '@/services/image';
@@ -26,7 +26,7 @@ export default function ImagesList({ images }: Props) {
       {images.map(({ id, url, name }) => (
         <li key={id} className="relative">
           <div className="group aspect-h-7 aspect-w-7 block w-full overflow-hidden rounded-lg bg-neutral-900 focus-within:ring-2 focus-within:ring-primary-500 focus-within:ring-offset-2 focus-within:ring-offset-neutral-900">
-            <Image
+            <CldImage
               fill
               priority
               sizes="(max-width: 1024px) 300px, (min-width: 1024px) 240px"

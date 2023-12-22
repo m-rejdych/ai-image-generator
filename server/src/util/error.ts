@@ -1,4 +1,5 @@
 import type { ErrorRequestHandler } from 'express';
+import type { Response } from 'node-fetch';
 
 import type { ResultResBody } from '../types/response';
 
@@ -10,6 +11,11 @@ type ErrorResData = {
   message: string;
   status: number;
 };
+
+interface CatchFetchErrorOptions {
+  message?: string;
+  status?: number;
+}
 
 export const createError = (message: string, status = 500): Error => {
   const error = new Error(message) as ExtendedError;
@@ -36,4 +42,18 @@ export const genericErrorHandler: ErrorRequestHandler<
   res
     .status(status)
     .json({ result: 'failure', data: { message: parsedMessage ?? error.message, status } });
+};
+
+export const catchFetchError = async (
+  responsePromise: Promise<Response>,
+  { message, status }: CatchFetchErrorOptions = {},
+): Promise<Response> => {
+  const response = await responsePromise;
+  if (!response.ok) {
+    const data = await response.json();
+    console.log('FETCH ERROR', data);
+    throw createError(message ?? response.statusText, status ?? response.status);
+  }
+
+  return response;
 };

@@ -1,9 +1,10 @@
 import fetch from 'node-fetch';
 import { randomUUID } from 'crypto';
+import { v2 as cloudinary } from 'cloudinary';
 import type { Prisma } from '@prisma/client';
 
-import { dbx } from '../util/dropbox';
 import { prisma } from '../util/prisma';
+import { catchFetchError } from '../util/error';
 import { getSortByCreatedAtType, type SortType } from '../util/image';
 import type { Style } from '../schemas/image';
 
@@ -36,33 +37,45 @@ export const generateImage = async (
   apiKeyId: string,
   { prompt, name, style }: GenerateImageData,
 ) => {
-  const response = await fetch(OPEN_AI_GENERATE_ENDPOINT, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${process.env.OPEN_AI_API_KEY}`,
-    },
-    body: JSON.stringify({
-      model: 'dall-e-3',
-      prompt,
-      style,
+  const response = await catchFetchError(
+    fetch(OPEN_AI_GENERATE_ENDPOINT, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${process.env.OPEN_AI_API_KEY}`,
+      },
+      body: JSON.stringify({
+        //model: 'dall-e-3',
+        prompt,
+        style,
+      }),
     }),
-  });
+    { message: 'There was an error generating image', status: 500 },
+  );
 
   const { data } = (await response.json()) as GenerateImageRes;
 
   const url = data[0].url;
   const id = randomUUID();
 
-  const imageResponse = await fetch(url);
+  const imageResponse = await catchFetchError(fetch(url));
   const buffer = await imageResponse.buffer();
-  const path = `/${apiKeyId}/${id}.png`;
 
-  await dbx.filesUpload({ path, contents: buffer });
-  const link = await dbx.sharingCreateSharedLinkWithSettings({ path });
-  const linkUrl = `${link.result.url}&raw=1`;
+  const cldImage = await new Promise((resolve, reject) => {
+    cloudinary.uploader
+      .upload_stream(
+        { folder: apiKeyId, use_asset_folder_as_public_id_prefix: true, public_id: id },
+        (err, result) => {
+          if (err) reject(err);
+          else resolve(result);
+        },
+      )
+      .end(buffer);
+  });
 
-  const image = await prisma.image.create({ data: { id, apiKeyId, name, url: linkUrl } });
+  const image = await prisma.image.create({
+    data: { id, apiKeyId, name, url: (cldImage as any).secure_url },
+  });
 
   const limit = await prisma.limit.findUnique({ where: { apiKeyId } });
   if (limit) {

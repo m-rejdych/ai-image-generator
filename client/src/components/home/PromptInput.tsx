@@ -1,6 +1,6 @@
 import { Fragment, useState, useRef } from 'react';
 import { Combobox, Dialog, Transition } from '@headlessui/react';
-import Image from 'next/image';
+import { CldImage } from 'next-cloudinary';
 import { useRouter } from 'next/navigation';
 
 import Loader from './Loader';
@@ -125,7 +125,7 @@ export default function PromptInput({ open, onClose }: Props) {
                   enterTo="translate-y-0"
                 >
                   {url && (
-                    <Image
+                    <CldImage
                       fill
                       sizes="(max-width: 672px) 100vw, (min-width: 672px) 672px"
                       src={url}

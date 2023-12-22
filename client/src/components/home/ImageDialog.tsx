@@ -1,6 +1,6 @@
 import { Fragment, useRef, useState } from 'react';
-import Image from 'next/image';
 import { Dialog, Transition } from '@headlessui/react';
+import { CldImage } from 'next-cloudinary';
 
 import Loader from '@/components/home/Loader';
 
@@ -47,7 +47,7 @@ export default function ImageDialog({ open, url, alt, onClose, onClosed }: Props
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-neutral-900 px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-[calc(100vh-4.5rem)] xl:max-w-5xl sm:p-6 aspect-1 w-screen">
-                <Image
+                <CldImage
                   ref={imageRef}
                   src={url}
                   alt={alt}
