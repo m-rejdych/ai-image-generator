@@ -45,7 +45,7 @@ export const generateImage = async (
         Authorization: `Bearer ${process.env.OPEN_AI_API_KEY}`,
       },
       body: JSON.stringify({
-        //model: 'dall-e-3',
+        model: 'dall-e-3',
         prompt,
         style,
       }),
