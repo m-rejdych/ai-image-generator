@@ -1,8 +1,10 @@
 import { Fragment, useRef, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { CldImage } from 'next-cloudinary';
+import { TrashIcon } from '@heroicons/react/20/solid';
 
 import Loader from '@/components/home/Loader';
+import Button from '@/components/atoms/Button';
 
 interface Props {
   open: boolean;
@@ -36,7 +38,7 @@ export default function ImageDialog({ open, url, alt, onClose, onClosed }: Props
           <div className="fixed inset-0 bg-black bg-opacity-70 transition-opacity" />
         </Transition.Child>
         <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
-          <div className="flex min-h-full items-center justify-center p-4 text-center">
+          <div className="flex flex-col min-h-full items-center justify-center p-4 text-center">
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
@@ -60,6 +62,21 @@ export default function ImageDialog({ open, url, alt, onClose, onClosed }: Props
                     <Loader />
                   </div>
                 )}
+              </Dialog.Panel>
+            </Transition.Child>
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              enterTo="opacity-100 translate-y-0 sm:scale-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 translate-y-0 sm:scale-100"
+              leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            >
+              <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-neutral-900 shadow-xl transition-all">
+                <Button variant="error" className=" aspect-1">
+                  <TrashIcon className="w-5 h-5" />
+                </Button>
               </Dialog.Panel>
             </Transition.Child>
           </div>

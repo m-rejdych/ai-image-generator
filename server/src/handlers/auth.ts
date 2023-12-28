@@ -20,7 +20,7 @@ interface LoginReqBody {
   apiKey: string;
 }
 
-const COOKIE_MAX_AGE = 60 * 60 * 1000;
+const COOKIE_MAX_AGE = 60 * 60 * 24 * 7 * 1000;
 
 export const generateApiKeyHandler: RequestHandler<
   Record<string, never>,
