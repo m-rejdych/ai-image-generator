@@ -1,10 +1,10 @@
 import fetch from 'node-fetch';
 import { randomUUID } from 'crypto';
-import { v2 as cloudinary } from 'cloudinary';
+import { v2 as cloudinary, UploadApiResponse } from 'cloudinary';
 import type { Prisma } from '@prisma/client';
 
 import { prisma } from '../util/prisma';
-import { catchFetchError } from '../util/error';
+import { catchFetchError, createError } from '../util/error';
 import { getSortByCreatedAtType, type SortType } from '../util/image';
 import type { Style } from '../schemas/image';
 
@@ -61,20 +61,20 @@ export const generateImage = async (
   const imageResponse = await catchFetchError(fetch(url));
   const buffer = await imageResponse.buffer();
 
-  const cldImage = await new Promise((resolve, reject) => {
+  const cldImage = await new Promise<UploadApiResponse>((resolve, reject) => {
     cloudinary.uploader
       .upload_stream(
         { folder: apiKeyId, use_asset_folder_as_public_id_prefix: true, public_id: id },
         (err, result) => {
-          if (err) reject(err);
-          else resolve(result);
+          if (result) resolve(result);
+          reject(err ?? 'unknown error');
         },
       )
       .end(buffer);
   });
 
   const image = await prisma.image.create({
-    data: { id, apiKeyId, name, url: (cldImage as any).secure_url },
+    data: { id, apiKeyId, name, url: cldImage.secure_url },
   });
 
   const limit = await prisma.limit.findUnique({ where: { apiKeyId } });
@@ -83,6 +83,23 @@ export const generateImage = async (
   }
 
   return image.url;
+};
+
+export const deleteImage = async (apiKeyId: string, id: string): Promise<boolean> => {
+  const image = await prisma.image.findUnique({ where: { id } });
+  if (!image) {
+    throw createError('Image not found', 404);
+  }
+
+  if (image.apiKeyId !== apiKeyId) {
+    throw createError('Image is not associated with this API key', 403);
+  }
+
+  await cloudinary.uploader.destroy(`${apiKeyId}/${id}`);
+
+  await prisma.image.delete({ where: { id } });
+
+  return true;
 };
 
 export const getImages = async (

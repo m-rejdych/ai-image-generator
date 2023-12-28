@@ -1,7 +1,14 @@
 import { RequestHandler } from 'express';
 
-import { generateImage, getImages, type GetImagesData, type GetImagesOptions } from '../controllers/image';
+import {
+  generateImage,
+  deleteImage,
+  getImages,
+  type GetImagesData,
+  type GetImagesOptions,
+} from '../controllers/image';
 import { generateImageSchema } from '../schemas/image';
+import { createError } from '../util/error';
 import type { ResultResBody } from '../types/response';
 
 type GenerateImageResData = {
@@ -10,6 +17,10 @@ type GenerateImageResData = {
 
 type GetImagesResData = {
   images: GetImagesData;
+};
+
+type DeleteImageQuery = {
+  imageId?: string;
 };
 
 export const generateImageHandler: RequestHandler<
@@ -21,6 +32,26 @@ export const generateImageHandler: RequestHandler<
     const data = generateImageSchema.parse(req.body);
     const url = await generateImage(req.apiKeyId, data);
     res.json({ result: 'success', data: { url } });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteImageHandler: RequestHandler<
+  Record<string, never>,
+  ResultResBody<null>,
+  never,
+  DeleteImageQuery
+> = async (req, res, next) => {
+  try {
+    const { imageId } = req.query;
+    if (!imageId) {
+      throw createError('"imageId" query is required', 400);
+    }
+
+    const result = await deleteImage(req.apiKeyId, imageId);
+
+    res.json({ result: result ? 'success' : 'failure', data: null });
   } catch (error) {
     next(error);
   }
