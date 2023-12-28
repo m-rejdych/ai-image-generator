@@ -11,14 +11,22 @@ interface Props {
 }
 
 export default function ImagesList({ images }: Props) {
+  const [id, setId] = useState('');
   const [url, setUrl] = useState('');
   const [alt, setAlt] = useState('');
   const [open, setOpen] = useState(false);
 
-  const handleOpen = (url: string, name: string): void => {
+  const handleOpen = (id: string, url: string, name: string): void => {
+    setId(id);
     setUrl(url);
     setAlt(name);
     setOpen(true);
+  };
+
+  const handleClose = (): void => {
+    setId('');
+    setUrl('');
+    setAlt('');
   };
 
   return (
@@ -37,7 +45,7 @@ export default function ImagesList({ images }: Props) {
             <button
               type="button"
               className="absolute inset-0"
-              onClick={() => handleOpen(url, name)}
+              onClick={() => handleOpen(id, url, name)}
             >
               <span className="sr-only">View details for {name}</span>
             </button>
@@ -49,6 +57,7 @@ export default function ImagesList({ images }: Props) {
       ))}
       <ImageDialog
         open={open}
+        id={id}
         url={url}
         alt={alt}
         onClose={() => setOpen(false)}

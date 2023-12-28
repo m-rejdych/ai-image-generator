@@ -12,7 +12,7 @@ type GenerateImageResData = {
 
 type GetImagesResData = {
   images: Image[];
-}
+};
 
 export const generateImage = async (
   name: string,
@@ -33,13 +33,27 @@ export const generateImage = async (
   return data.url;
 };
 
+export const deleteImage = async (imageId: string): Promise<boolean> => {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/image/delete?imageId=${imageId}`,
+    {
+      method: 'DELETE',
+      credentials: 'include',
+    },
+  );
+
+  const { result }: ResultResBody<null> = await response.json();
+
+  return result === 'success';
+};
+
 export const getImages = async (cookie?: string): Promise<Image[]> => {
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/image/list?sort=desc`, {
     credentials: 'include',
     headers: cookie ? { Cookie: cookie } : undefined,
   });
 
-  const { data } = await response.json() as ResultResBody<GetImagesResData>;
+  const { data } = (await response.json()) as ResultResBody<GetImagesResData>;
 
   return data.images;
 };
