@@ -73,13 +73,13 @@ export default function ImageDialog({ open, id, url, alt, onClose, onClosed }: P
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-neutral-900 px-4 pb-4 pt-5 text-left shadow-xl transition-all my-8 sm:w-full sm:max-w-[calc(100vh-4.5rem)] xl:max-w-5xl sm:p-6 aspect-1 w-screen">
+              <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-neutral-900 px-4 pb-4 pt-5 text-left shadow-xl transition-all my-8 sm:w-full sm:max-w-[calc(100vh-8.5rem)] 2xl:max-w-5xl sm:p-6 aspect-1 w-screen">
                 <CldImage
                   ref={imageRef}
                   src={url}
                   alt={alt}
                   fill
-                  sizes="(max-width: 1024px) 100vw, (max-width: 1280px) 100vh, (min-width: 1280px) 1024px"
+                  sizes="(max-width: 1024px) 100vw, (max-width: 1536px) 100vh, (min-width: 1536px) 1024px"
                   onLoad={() => setIsLoaded(true)}
                 />
                 {!isLoaded && (
