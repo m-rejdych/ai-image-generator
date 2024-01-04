@@ -2,7 +2,7 @@ import type { HTMLProps } from 'react';
 
 type ButtonTypes = 'submit' | 'button' | 'reset' | undefined;
 
-type Variant = 'primary' | 'error';
+type Variant = 'primary' | 'secondary' | 'error';
 
 interface Props extends Omit<HTMLProps<HTMLButtonElement>, 'type'> {
   type?: ButtonTypes;
@@ -28,6 +28,8 @@ const getClassName = ({ disabled, className, variant }: ClassNameOptions): strin
     switch (variant) {
       case 'error':
         return 'bg-red-600 hover:bg-red-500';
+      case 'secondary':
+      return 'bg-neutral-050/10 hover:bg-neutral-050/20';
       case 'primary':
       default:
         return 'bg-primary-600 hover:bg-primary-500';
