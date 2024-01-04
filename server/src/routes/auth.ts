@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { generateApiKeyHandler, loginHandler } from '../handlers/auth';
+import { generateApiKeyHandler, loginHandler, logoutHandler } from '../handlers/auth';
 import { validateAuthorizationSecretKey } from '../middleware/auth';
 
 export const router = Router();
@@ -12,3 +12,5 @@ router.post(
 );
 
 router.put('/login', loginHandler);
+
+router.put('/logout', logoutHandler);

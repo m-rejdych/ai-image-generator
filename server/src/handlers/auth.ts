@@ -65,3 +65,11 @@ export const loginHandler: RequestHandler<
     next(error);
   }
 };
+
+export const logoutHandler: RequestHandler<Record<string, never>, ResultResBody<null>> = (
+  _,
+  res,
+) => {
+  res.clearCookie('apiKey');
+  res.json({ result: 'success', data: null });
+};

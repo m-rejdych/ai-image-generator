@@ -27,3 +27,15 @@ export const login = async (apiKey: string): Promise<LoginResult> => {
     apiKeyCookie,
   };
 };
+
+export const logout = async (): Promise<boolean> => {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`, {
+    method: 'PUT',
+    credentials: 'include',
+    cache: 'no-store',
+  });
+
+  const data: ResultResBody<null> = await response.json();
+
+  return data.result === 'success';
+};

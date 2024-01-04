@@ -1,12 +1,30 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 import Button from '@/components/atoms/Button';
 import PromptInput from '@/components/home/PromptInput';
+import { logout } from '@/services/auth';
+import { AUTH_URL } from '@/constants/urls';
 
 export default function Heading() {
   const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+
+  const handleLogout = async (): Promise<void> => {
+    setIsLoading(true);
+
+    try {
+      if (await logout()) {
+        router.push(AUTH_URL);
+      }
+    } catch (error) {
+      setIsLoading(false);
+      console.log(error);
+    }
+  };
 
   return (
     <>
@@ -18,13 +36,20 @@ export default function Heading() {
             </h2>
           </div>
           <div className="mt-4 flex flex-col md:flex-row md:ml-4 md:mt-0">
-            <Button type="button" onClick={() => setOpen(true)} className="whitespace-nowrap">
+            <Button
+              type="button"
+              disabled={isLoading}
+              onClick={() => setOpen(true)}
+              className="whitespace-nowrap"
+            >
               Add image
             </Button>
             <Button
               type="button"
               variant="secondary"
               className="whitespace-nowrap mt-4 md:ml-4 md:mt-0"
+              disabled={isLoading}
+              onClick={handleLogout}
             >
               Logout
             </Button>
