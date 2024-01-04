@@ -70,6 +70,12 @@ export const logoutHandler: RequestHandler<Record<string, never>, ResultResBody<
   _,
   res,
 ) => {
-  res.clearCookie('apiKey');
+  res.clearCookie('apiKey', {
+    httpOnly: true,
+    maxAge: COOKIE_MAX_AGE,
+    secure: process.env.NODE_ENV === 'production',
+    domain: process.env.NODE_ENV === 'production' ? process.env.PRODUCTION_DOMAIN : undefined,
+    sameSite: 'strict',
+  });
   res.json({ result: 'success', data: null });
 };
