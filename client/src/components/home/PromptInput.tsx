@@ -4,6 +4,7 @@ import { CldImage } from 'next-cloudinary';
 import { useRouter } from 'next/navigation';
 
 import Loader from './Loader';
+import { IMAGE_STYLES, type Style } from '@/constants/image';
 import { generateImage } from '@/services/image';
 
 interface Props {
@@ -18,10 +19,12 @@ export default function PromptInput({ open, onClose }: Props) {
   const [loading, setLoading] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [url, setUrl] = useState('');
+  const [style, setStyle] = useState<Style>(IMAGE_STYLES[0].value);
   const router = useRouter();
   const nameRef = useRef<HTMLInputElement>(null);
 
   const isLoading = (!imageLoaded && !!url) || loading;
+  const isInputDisabled = loading || !!url;
 
   const handleClose = (): void => {
     if (isLoading) return;
@@ -46,7 +49,7 @@ export default function PromptInput({ open, onClose }: Props) {
 
     try {
       setLoading(true);
-      const url = await generateImage(name, prompt);
+      const url = await generateImage(name, prompt, style);
       setUrl(url);
       setLoading(false);
       router.refresh();
@@ -62,6 +65,7 @@ export default function PromptInput({ open, onClose }: Props) {
     setUrl('');
     setShowNameInput(false);
     setImageLoaded(false);
+    setStyle(IMAGE_STYLES[0].value);
   };
 
   return (
@@ -89,7 +93,7 @@ export default function PromptInput({ open, onClose }: Props) {
             leaveTo="opacity-0 scale-95"
           >
             <Dialog.Panel className="mx-auto max-w-2xl transform divide-y divide-neutral-700 overflow-hidden rounded-xl bg-neutral-900 shadow-2xl ring-1 ring-black ring-opacity-5 transition-all">
-              <Combobox disabled={loading || !!url}>
+              <Combobox disabled={isInputDisabled}>
                 <div className="relative">
                   <Combobox.Input
                     className="h-12 w-full border-0 bg-transparent disabled:text-neutral-500 px-4 text-neutral-200 placeholder:text-neutral-400 focus:ring-0 sm:text-sm"
@@ -100,6 +104,42 @@ export default function PromptInput({ open, onClose }: Props) {
                     onKeyDown={handleKeyDownPrompt}
                   />
                 </div>
+                <Transition
+                  show
+                  appear
+                  className="relative"
+                  enter="transition ease-out duration-300 transform"
+                  enterFrom="-translate-y-full"
+                  enterTo="translate-y-0"
+                >
+                  <fieldset disabled={isInputDisabled}>
+                    <legend className="sr-only">Image style</legend>
+                    <div className="m-4">
+                      {IMAGE_STYLES.map(({ label, value }) => (
+                        <div key={value} className="flex items-center">
+                          <input
+                            id={value}
+                            name="image-style"
+                            type="radio"
+                            checked={style === value}
+                            disabled={isInputDisabled}
+                            onChange={() => setStyle(value)}
+                            onKeyDown={handleKeyDownPrompt}
+                            className="h-4 w-4 border-neutral-700 text-primary-400 focus:ring-neutral-600"
+                          />
+                          <label
+                            htmlFor={value}
+                            className={`ml-3 block text-sm font-medium leading-6 text-neutral-200${
+                              isInputDisabled ? ' text-neutral-500' : ''
+                            }`}
+                          >
+                            {label}
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+                  </fieldset>
+                </Transition>
                 <Transition
                   show={showNameInput}
                   className="relative"

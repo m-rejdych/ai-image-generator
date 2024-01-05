@@ -1,4 +1,5 @@
 import type { ResultResBody } from '../types/response';
+import type { Style } from '@/constants/image';
 
 export interface Image {
   id: string;
@@ -17,7 +18,7 @@ type GetImagesResData = {
 export const generateImage = async (
   name: string,
   prompt: string,
-  style?: 'vivid' | 'natural',
+  style?: Style,
 ): Promise<string> => {
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/image/generate`, {
     method: 'POST',
