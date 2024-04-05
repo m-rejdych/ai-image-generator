@@ -2,7 +2,7 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "index.ts",
+  "main": "src/index.ts",
   "scripts": {
     "start": "node build/bundle.*.js",
     "dev": "nodemon --ext ts --files src/index.ts",
